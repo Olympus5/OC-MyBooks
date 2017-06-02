@@ -29,7 +29,7 @@ class Author {
    * @return Author id
    */
   public function getId() {
-    return $this->id
+    return $this->id;
   }
 
   /**

@@ -8,23 +8,23 @@ use MyBooks\Domain\Author;
  * @author Olympus5
  */
 class AuthorDAO extends DAO {
-
   /**
-   * Return list of all author, sorted by date (most recent first)
-   * @return A list of all author
+   * Returns an author matching the supplied id.
+   * @param id Author id
+   * @return An exception if no matching author is found
    */
-  public function findAll() {
-    $sql = 'SELECT * FROM t_author ORDER BY auth_id DESC;';
+    public function find($id) {
+      $sql = 'SELECT * FROM author WHERE auth_id=?;';
 
-    $result = $this->getDb()->fetchAll($sql);
+      $row = $this->getDb()->fetchAssoc($sql, array($id));
 
-    $authors = array();
+      if($row)
+        $author = $this->buildDomainObject($row);
+      else
+        throw new \Exception('No author matching id '.$id);
 
-    foreach($result as $row) {
-      $author = buildDomainObject($row);
-      array[$row['auth_id']] = $author;
+      return $author;
     }
-  }
 
   /**
    * Create an Author object based on a DB row

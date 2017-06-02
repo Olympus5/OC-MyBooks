@@ -8,8 +8,12 @@ use MyBooks\Domain\Book;
  * @author Olympus5
  */
 class BookDAO extends DAO {
-  private $authorDAO;
 
+  /**
+   * @var \MyBooks\DAO\AuthorDAO
+   */
+  private $authorDAO;
+  
   public function setAuthorDAO(AuthorDAO $authorDAO) {
     $this->authorDAO = $authorDAO;
   }
@@ -36,6 +40,25 @@ class BookDAO extends DAO {
   }
 
   /**
+   * Returns an book matching the supplied id.
+   * @param id Book id
+   * @return An exception if no matching book is found
+   */
+  public function find($id) {
+    $sql = 'SELECT * FROM book WHERE book_id=?';
+
+    $row = $this->getDb()->fetchAssoc($sql, array($id));
+
+    if($row) {
+      $book = $this->buildDomainObject($row);
+    } else {
+      throw new \Exception('No book matching id '.$id);
+    }
+
+    return $book;
+  }
+
+  /**
    * Create an Author object based on a DB row
    * @param row The DB row contain Author data
    * @return Author object
@@ -54,7 +77,7 @@ class BookDAO extends DAO {
     if(array_key_exists('auth_id', $row)) {
       $authorId = $row['auth_id'];
       $author = $this->authorDAO->find($authorId);
-      $author->setAuthor($author);
+      $book->setAuthor($author);
     }
 
     return $book;
