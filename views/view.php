@@ -12,9 +12,14 @@
 
     <main>
       <?php
+        foreach($books as $book) {
         ?>
-        <!--Affichage des livres-->
+        <article>
+          <h2><?php echo $book->getTitle() ?></h2>
+          <p><?php echo $book->getSummary() ?></p>
+        </article>
         <?php
+        }
       ?>
     </main>
 
